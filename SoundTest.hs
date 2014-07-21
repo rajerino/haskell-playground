@@ -62,17 +62,16 @@ ploop song song_ = if not (null (tail song_))
                         
 
 
-parseNote :: String -> (Float,Float,Float)
-parseNote note = (freq, sec, amp) 
-     where
-     freq = getNote note
-     sec  = (read (getNoteDuration note ):: Float)
-     amp  = (read (getNoteVelocity note) :: Float)
+--parseNote :: [Char] -> (Float,Float,Float)
+--parseNote note = (freq, sec, amp) 
+--     where
+--     freq = getNote note
+--     sec  = (read (getNoteDuration note):: Float)
+--     amp  = (read (getNoteVelocity note) :: Float)
 
 
-
-getNote :: String -> Float  --uses noteList and noteFreqList to get frequency
-getNote note = getFreq (head note) ((read (head (tail ((read note) :: [String])))) :: Float)
+getNote :: [Char] -> Float  --uses noteList and noteFreqList to get frequency
+getNote (note : octave) = getFreq note (read octave :: Float)
 
 getNoteDuration :: String -> String --note duration in seconds
 getNoteDuration note = (tail (tail (tail note)))
@@ -83,7 +82,7 @@ getNoteVelocity note = (head (tail (tail ((read note) :: [String]))))
 getFreq :: Char -> Float -> Float
 getFreq note octave = (1 + octave) * (noteFreqList !! (getFreqListIndex note))
 
-noteList     = ['a','b','c','d','e','f','g','A','C','D','F','G']    --sharps are denoted with capitalization
+noteList     = ["a","b","c","d","e","f","g","A","C","D","F","G"]    --sharps are denoted with capitalization
 noteFreqList = [27.50,30.87,16.35,18.35,20.60,21.83,24.50,29.14,17.32,19.45,23.12,25.96]
 --use frequency ranges instead of this dictionary to make smooth, pitch-bendable octaves 
 
@@ -92,7 +91,7 @@ cMajorScale = [(523.25 :: Float,0.2 :: Float,1 :: Float),(587.33 :: Float,0.2 ::
 amzGr = [(392 :: Float,0.25 :: Float,1 :: Float),(523.25 :: Float,0.5 :: Float,1 :: Float),(659.26 :: Float,0.125 :: Float,1 :: Float),(523.25 :: Float,0.125 :: Float,1),(659.26 :: Float,0.5 :: Float,1 :: Float),(587.33 :: Float,0.25 :: Float,1 :: Float),(523.25 :: Float,0.5 :: Float,1 :: Float),(440 :: Float,0.25 :: Float,1 :: Float),(392 :: Float,0.5 :: Float,1 :: Float),(392 :: Float,0.25 :: Float,1 :: Float),(523.25 :: Float,0.5 :: Float,1 :: Float),(659.26 :: Float,0.125 :: Float,1 :: Float),(523.25 :: Float,0.125 :: Float,1 :: Float),(659.26 :: Float,0.5 :: Float,1 :: Float),(587.33 :: Float,0.125 :: Float,1 :: Float),(659.26 :: Float,0.125 :: Float,1 :: Float),(783.99 :: Float,0.5 :: Float,1 :: Float)]
 
 getFreqListIndex :: Char -> Int
-getFreqListIndex noteName = head [x | x <- [0..11], (noteList !! x) == noteName]
+getFreqListIndex noteName = head [x | x <- [0..11], (noteList !! x) == [noteName]]
 {--
 getNoteName :: String -> String
 getNoteName note = head note : head (tail note) : []
